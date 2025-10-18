@@ -1,0 +1,45 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=influxdb
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=percona
+      - DOCKER_INFLUXDB_INIT_BUCKET=ftdc
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=ftdc
+      - INFLUXD_QUERY_MAX_SELECT_SERIES=10000
+      - INFLUXD_QUERY_MAX_SELECT_BUCKETS=10000
+      - INFLUXD_QUERY_MAX_SELECT_POINTS=0
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+
+  grafana:
+    image: ajithkn716/grafana-ftdc-v2
+    container_name: ajithkn716-grafana-ftdc-v2
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+    links:
+      - influxdb
+
+  metrics-processor:
+    image: ajithkn716/mongo-ftdc-v2
+    container_name: ajithkn716-mongo-ftdc-v2
+    volumes:
+      - ./diagnostic.data:/diagnostic.data
+    depends_on:
+      - influxdb
+    environment:
+       - MAX_WORKERS=2   # <-- User can set desired worker threads here
+       - MAX_FILE_PROCESS=1   # <-- User can set parallel file processing
+    entrypoint: ["/scripts/main.sh", "/diagnostic.data"]
+
+volumes:
+  influxdb-data:
