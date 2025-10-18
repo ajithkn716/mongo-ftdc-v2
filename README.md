@@ -1,7 +1,4 @@
 # mongo-ftdc-v2
-<<<<<<< HEAD
-Display MongoDB FTDC Metrics Using Grafana
-=======
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 [![Docker Pulls](https://img.shields.io/docker/pulls/ajithkn716/mongo-ftdc-v2)](https://hub.docker.com/r/ajithkn716/mongo-ftdc-v2)  
@@ -166,4 +163,3 @@ If you notice any issues, have ideas to improve the script or want to add new fe
 3. **Submit a pull request**  
 
 Your help will make this project more robust and useful for the MongoDB community. Thank you for contributing! 🙂
->>>>>>> 00eb96f (Initial commit)
